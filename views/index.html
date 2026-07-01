@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<!-- saved from url=(0051)https://test1-production-2a5c.up.railway.app/quotes -->
+<html lang="id">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Inspiration</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <header>
+    <h1>Daily Inspiration For You</h1>
+    <p>Koleksi kata-kata mutiara</p>
+  </header>
+
+  <main>
+    <div class="quotes-grid" id="quotes-grid">
+      <div class="quote-card">
+        <div class="quote-icon">"</div>
+        <p class="quote-text">Jika kamu lelah, belajarlah untuk beristirahat, bukan untuk menyerah.</p>
+        <div class="quote-author">— Banksy</div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-icon">"</div>
+        <p class="quote-text">Setiap hari adalah kesempatan baru untuk menjadi lebih baik dari kemarin.</p>
+        <div class="quote-author">— Unknown</div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-icon">"</div>
+        <p class="quote-text">Kebahagiaan bukanlah sesuatu yang siap pakai. Itu berasal dari tindakanmu sendiri.</p>
+        <div class="quote-author">— Dalai Lama</div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-icon">"</div>
+        <p class="quote-text">Kita tidak bisa mengendalikan arah angin, tapi kita bisa menyesuaikan layar kita.</p>
+        <div class="quote-author">— Jimmy Dean</div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-icon">"</div>
+        <p class="quote-text">Cara terbaik untuk memprediksi masa depan adalah dengan menciptakannya.</p>
+        <div class="quote-author">— Abraham Lincoln</div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-icon">"</div>
+        <p class="quote-text">The best time to plant a tree was 20 years ago. The second best time is now.</p>
+        <div class="quote-author">— Chinese Proverb</div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-icon">"</div>
+        <p class="quote-text">Bersyukurlah atas apa yang kamu miliki; kamu akan mendapatkan lebih banyak lagi.</p>
+        <div class="quote-author">— Oprah Winfrey</div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-icon">"</div>
+        <p class="quote-text">Rahasia untuk maju adalah memulai.</p>
+        <div class="quote-author">— Mark Twain</div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-icon">"</div>
+        <p class="quote-text">Masa depan milik mereka yang percaya pada keindahan mimpi-mimpi mereka.</p>
+        <div class="quote-author">— Eleanor Roosevelt</div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    async function loadQuotes() {
+      const grid = document.getElementById('quotes-grid');
+      try {
+        const response = await fetch('/api/quotes');
+        const quotes = await response.json();
+
+        grid.innerHTML = ''; // Hapus loading text
+
+        if (quotes.length === 0) {
+          grid.innerHTML = '<p class="no-data">Belum ada quotes di database.</p>';
+          return;
+        }
+
+        quotes.forEach(quote => {
+          const card = document.createElement('div');
+          card.className = 'quote-card';
+          card.innerHTML = `
+                        <div class="quote-icon">"</div>
+                        <p class="quote-text">${quote.text}</p>
+                        <div class="quote-author">— ${quote.author}</div>
+                    `;
+          grid.appendChild(card);
+        });
+      } catch (error) {
+        grid.innerHTML = '<p class="error">Gagal memuat quotes. Periksa koneksi database.</p>';
+        console.error(error);
+      }
+    }
+
+    // Jalankan saat halaman dimuat
+    loadQuotes();
+  </script>
+
+
+</body>
+
+</html>
