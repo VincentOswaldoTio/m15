@@ -6,18 +6,19 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Menyediakan akses folder statis public
 app.use(express.static(path.join(__dirname, 'public')));
 
-// 1. Inisialisasi Koneksi Sequelize menggunakan Public URL
+// 1. Inisialisasi Koneksi Sequelize
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
-    dialect: 'mysql', //
-    logging: false,    // Ubah jadi true jika ingin melihat query SQL mentah di terminal
+    dialect: 'mysql',
+    logging: false,
     dialectOptions: {
-        connectTimeout: 60000 // Mencegah kegagalan koneksi jika jaringan lambat
+        connectTimeout: 60000
     }
 });
 
-// 2. Definisikan Model 'Quote' agar sesuai dengan tabel quotes Anda
+// 2. Definisikan Model 'Quote'
 const Quote = sequelize.define('Quote', {
     id: {
         type: DataTypes.INTEGER,
@@ -38,20 +39,25 @@ const Quote = sequelize.define('Quote', {
         defaultValue: Sequelize.NOW
     }
 }, {
-    tableName: 'quotes', // Memaksa sequelize menggunakan nama tabel asli dari database
-    timestamps: false    // Matikan jika Anda tidak menggunakan kolom bawaan updatedAt dan createdAt default Sequelize
+    tableName: 'quotes',
+    timestamps: false
 });
 
-// Tes koneksi database saat server dinyalakan
+// Cek Koneksi Database
 sequelize.authenticate()
     .then(() => console.log('Koneksi Sequelize berhasil terhubung ke MySQL Railway.'))
     .catch(err => console.error('Gagal terhubung ke database:', err));
 
-// Endpoint a: Mengembalikan 9 data JSON secara acak
+// Endpoint Halaman Utama (Mencegah Cannot GET /)
+app.get('/', (req, res) => {
+    res.redirect('/quotes');
+});
+
+// Endpoint API JSON
 app.get('/api/quotes', async (req, res) => {
     try {
         const randomQuotes = await Quote.findAll({
-            order: sequelize.random(), // Fungsi SQL RAND() versi Sequelize
+            order: sequelize.random(),
             limit: 9
         });
         res.json(randomQuotes);
@@ -61,7 +67,7 @@ app.get('/api/quotes', async (req, res) => {
     }
 });
 
-// Endpoint b: Mengirimkan halaman web utama (quotes.html)
+// Endpoint Tampilan Web Utama
 app.get('/quotes', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'quotes.html'));
 });
