@@ -1,21 +1,23 @@
 <!DOCTYPE html>
-<!-- saved from url=(0051)https://test1-production-2a5c.up.railway.app/quotes -->
 <html lang="id">
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Daily Inspiration</title>
+  <title>Daily Inspiration // SYS_QUOTES</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
+  <div class="scanline-overlay"></div>
+  <div class="grid-floor"></div>
   <header>
-    <h1>Daily Inspiration For You</h1>
-    <p>Koleksi kata-kata mutiara</p>
+    <p class="header-tag">// TRANSMISSION_ACTIVE</p>
+    <h1 data-text="DAILY INSPIRATION">DAILY INSPIRATION</h1>
+    <p class="subtitle">&gt; koleksi kata-kata mutiara <span class="cursor">_</span></p>
   </header>
-
   <main>
     <div class="quotes-grid" id="quotes-grid">
       <div class="quote-card">
@@ -65,42 +67,61 @@
       </div>
     </div>
   </main>
-
+  <footer>
+    <p>[ SYSTEM ONLINE ] &nbsp;•&nbsp; NODE: quotes.db &nbsp;•&nbsp; STATUS: <span class="ok">200 OK</span></p>
+  </footer>
   <script>
     async function loadQuotes() {
+
       const grid = document.getElementById('quotes-grid');
+
       try {
+
         const response = await fetch('/api/quotes');
+
         const quotes = await response.json();
 
         grid.innerHTML = ''; // Hapus loading text
 
         if (quotes.length === 0) {
+
           grid.innerHTML = '<p class="no-data">Belum ada quotes di database.</p>';
+
           return;
+
         }
 
         quotes.forEach(quote => {
+
           const card = document.createElement('div');
+
           card.className = 'quote-card';
+
           card.innerHTML = `
-                        <div class="quote-icon">"</div>
-                        <p class="quote-text">${quote.text}</p>
-                        <div class="quote-author">— ${quote.author}</div>
+<div class="quote-icon">"</div>
+<p class="quote-text">${quote.text}</p>
+<div class="quote-author">— ${quote.author}</div>
+
                     `;
+
           grid.appendChild(card);
+
         });
+
       } catch (error) {
+
         grid.innerHTML = '<p class="error">Gagal memuat quotes. Periksa koneksi database.</p>';
+
         console.error(error);
+
       }
+
     }
 
     // Jalankan saat halaman dimuat
+
     loadQuotes();
   </script>
-
-
 </body>
 
 </html>
